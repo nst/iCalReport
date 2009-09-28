@@ -27,7 +27,7 @@ class CalTop(object):
         self.calendars = self.store.calendars().filteredArrayUsingPredicate_(predicate)
 
         if len(self.calendars) != 1:
-            print "Error: %d calendars with title %s" % (len(self.calendars), self.title)
+            print "Error: %d calendars with title %s" % (len(self.calendars), self.cal_name)
             sys.exit(1)
 
     def print_digest(self, start_date, stop_date):
