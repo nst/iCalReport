@@ -1,3 +1,4 @@
+$ python icaltop.py
 Usage: icaltop.py [options]
 
 Options:
@@ -13,3 +14,15 @@ Options:
 
   Example:
     $ icaltop -c MyHours -m 9 -u 10 -l
+
+$ python icaltop.py -c "Heures_2009" -l
+------------------------------
+From 2009-09-01 to 2009-09-30
+------------------------------
+Annual Meeting       8.50
+MobiWalk             3.50
+MetaMin              11.50
+Memoria Mea 2        105.25
+------------------------------
+Total                128.75
+------------------------------
