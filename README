@@ -1,13 +1,13 @@
-$ python icaltop.py
+$ python icaltop.py --help
 Usage: icaltop.py [options]
 
 Options:
-  -h, --help   show this help message and exit
-  -c NAME      Name of the calendar (mandatory)
-  -m MONTH     Number of the month for which to report (default: current)
-  -u MONTH_NB  Number of the month until which to report (default:
-               month_start)
-  -l           Look for projects in events locations (default: titles)
+  -h, --help  show this help message and exit
+  -c NAME     Name of the calendar (mandatory)
+  -m MONTH    Number of the month for which to report (default: current)
+  -u MONTH    Number of the month until which to report (default:
+              month_start)
+  -l          Look for projects in events locations (default: titles)
 
   Purpose:
     Report the time spent on projects by reading iCal events.

@@ -81,7 +81,7 @@ if __name__ == '__main__':
     parser.add_option("-c", help="Name of the calendar (mandatory)", dest="cal_name", metavar="NAME",)
     parser.add_option("-m", action="store", type="int", dest="month_start", metavar="MONTH",
                       help="Number of the month for which to report (default: current)")
-    parser.add_option("-u", action="store", type="int", dest="month_stop", metavar="MONTH_NB",
+    parser.add_option("-u", action="store", type="int", dest="month_stop", metavar="MONTH",
                       help="Number of the month until which to report (default: month_start)")
     parser.add_option("-l", action="store_true", dest="use_location",
                       help="Look for projects in events locations (default: titles)")
