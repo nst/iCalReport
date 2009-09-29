@@ -2,7 +2,7 @@
 
 # Nicolas Seriot
 # 2009-09-28
-# http://github.com/nst/iCalTop
+# http://github.com/nst/iCalReport
 
 import sys
 import datetime
@@ -10,7 +10,7 @@ import re
 from optparse import OptionParser, OptionGroup
 from Foundation import NSProcessInfo
 
-class CalTop(object):
+class CalReport(object):
     
     def __init__(self, cal_name, field='title'):
     
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     os_version = re.compile("Version (\d+\.\d+)\.\d+ .*").match(os_version).groups()[0]
     
     if float(os_version) < 10.6:
-        print "icaltop needs Mac OS X 10.6 or later"
+        print "icalreport needs Mac OS X 10.6 or later"
         sys.exit(1)
         
     from CalendarStore import *
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     group = OptionGroup(parser, "Purpose", "Report the time spent on projects by reading iCal events.")
     parser.add_option_group(group)
                       
-    group = OptionGroup(parser, "Example", "$ icaltop -c MyHours -m 9 -u 10 -l")
+    group = OptionGroup(parser, "Example", "$ icalreport -c MyHours -m 9 -u 10 -l")
     parser.add_option_group(group)
     
     (options, args) = parser.parse_args()
@@ -119,7 +119,7 @@ if __name__ == '__main__':
     
     field = 'location' if parser.values.use_location else 'title'
     
-    ct = CalTop(cal_name=parser.values.cal_name, field=field)
+    ct = CalReport(cal_name=parser.values.cal_name, field=field)
     ct.print_digest(start_date, stop_date)
         
     

@@ -1,5 +1,5 @@
-$ python icaltop.py --help
-Usage: icaltop.py [options]
+$ python icalreport.py --help
+Usage: icalreport.py [options]
 
 Options:
   -h, --help  show this help message and exit
@@ -10,12 +10,12 @@ Options:
   -l          Look for projects in events locations (default: titles)
 
   Purpose:
-    Report the time spent on projects by reading iCal events.
+    Read iCal events and report the time you spend on projects.
 
   Example:
-    $ icaltop -c MyHours -m 9 -u 10 -l
+    $ icalreport -c MyHours -m 9 -u 10 -l
 
-$ python icaltop.py -c "Heures_2009" -l
+$ python icalreport.py -c "Heures_2009" -l
 ------------------------------
 From 2009-09-01 to 2009-09-30
 ------------------------------
