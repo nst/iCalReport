@@ -35,7 +35,7 @@ class CalReport(object):
         predicate = CalCalendarStore.eventPredicateWithStartDate_endDate_calendars_(start_date, stop_date, self.calendars)
         
         events = self.store.eventsWithPredicate_(predicate)
-        
+                
         projects = {}
         
         for e in events:
@@ -49,7 +49,7 @@ class CalReport(object):
         total = 0.0
         
         print "-" * 30
-        print "From", start_date, "to", stop_date
+        print "From", start_date, "to", stop_date - datetime.timedelta(days=1)
         print "-" * 30
         
         for (p, s) in projects.iteritems():
@@ -115,7 +115,7 @@ if __name__ == '__main__':
     year_shift = 1 if (month_stop <= month_start) else 0
             
     start_date = datetime.date(year=now.year, month=month_start, day=1)
-    stop_date = datetime.date(year=now.year+year_shift, month=month_stop, day=1) - datetime.timedelta(days=1)
+    stop_date = datetime.date(year=now.year+year_shift, month=month_stop, day=1)
     
     field = 'location' if parser.values.use_location else 'title'
     
