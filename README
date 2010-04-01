@@ -7,6 +7,7 @@ Options:
   -m MONTH    Number of the month for which to report (default: current)
   -u MONTH    Number of the month until which to report (default: current)
   -w          Report for the current week
+  -s NUMBER   Skip items which are longer than this number of hours
   -l          Look for projects in events locations (default: titles)
 
   Purpose:
@@ -16,7 +17,7 @@ Options:
     $ icalreport -c MyHours -m 9 -u 10 -l
 
   Example:
-    $ icalreport -c MyHours -w
+    $ icalreport -c MyHours -w -s 8
 
 
 $ python icalreport.py -c "Heures_2009" -l

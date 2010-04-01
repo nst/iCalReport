@@ -30,7 +30,7 @@ class CalReport(object):
             print "Error: %d calendars with title %s" % (len(self.calendars), self.cal_name)
             sys.exit(1)
             
-    def print_digest(self, start_date, stop_date):
+    def print_digest(self, start_date, stop_date, event_duration_limit):
     
         predicate = CalCalendarStore.eventPredicateWithStartDate_endDate_calendars_(start_date, stop_date, self.calendars)
         
@@ -40,11 +40,17 @@ class CalReport(object):
         
         for e in events:
             name = e.location() if self.field == 'location' else e.title()
+                        
+            event_duration = e.endDate().timeIntervalSinceDate_(e.startDate()) / 3600.0
+            
+            if event_duration_limit:
+                if event_duration >= event_duration_limit:
+                    continue
             
             if not name in projects:
                 projects[name] = 0.0
             
-            projects[name] += e.endDate().timeIntervalSinceDate_(e.startDate())
+            projects[name] += event_duration
         
         total = 0.0
         
@@ -56,11 +62,11 @@ class CalReport(object):
             if not p:
                 p = ''
 
-            print p.ljust(20, ' '), "%0.2f" % (s / 3600.0)
+            print p.ljust(20, ' '), "%0.2f" % (s)
             total += s
         
         print "-" * 30
-        print "Total".ljust(20, ' '), "%0.2f" % (total / 3600.0)
+        print "Total".ljust(20, ' '), "%0.2f" % (total)
         print "-" * 30
 
     def get_start_and_end_for_week(self, year, week):
@@ -120,7 +126,8 @@ if __name__ == '__main__':
                       help="Number of the month until which to report (default: current)")
     parser.add_option("-w", action="store_true", dest="week", metavar="WEEK",
                       help="Report for the current week")
-
+    parser.add_option("-s", action="store", type="int", dest="event_duration_limit", metavar="NUMBER",
+                    help="Skip items which are longer than this number of hours")
     parser.add_option("-l", action="store_true", dest="use_location",
                       help="Look for projects in events locations (default: titles)")
 
@@ -130,7 +137,7 @@ if __name__ == '__main__':
     group = OptionGroup(parser, "Example", "$ icalreport -c MyHours -m 9 -u 10 -l")
     parser.add_option_group(group)
     
-    group = OptionGroup(parser, "Example", "$ icalreport -c MyHours -w")
+    group = OptionGroup(parser, "Example", "$ icalreport -c MyHours -w -s 8")
     parser.add_option_group(group)
     
     (options, args) = parser.parse_args()
@@ -148,6 +155,11 @@ if __name__ == '__main__':
     
     ct = CalReport(cal_name=parser.values.cal_name, field=field)
     
+    if parser.values.event_duration_limit:
+        event_duration_limit = int(parser.values.event_duration_limit)
+    else:
+        event_duration_limit = 0
+    
     if options.week == True:
         now = datetime.datetime.now()
         
@@ -158,4 +170,4 @@ if __name__ == '__main__':
     else:
         start_date, stop_date = ct.get_start_and_end_for_month(parser, options)
     
-    ct.print_digest(start_date, stop_date)
+    ct.print_digest(start_date, stop_date, event_duration_limit)
