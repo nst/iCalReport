@@ -5,15 +5,19 @@ Options:
   -h, --help  show this help message and exit
   -c NAME     Name of the calendar (mandatory)
   -m MONTH    Number of the month for which to report (default: current)
-  -u MONTH    Number of the month until which to report (default:
-              month_start)
+  -u MONTH    Number of the month until which to report (default: current)
+  -w          Report for the current week
   -l          Look for projects in events locations (default: titles)
 
   Purpose:
-    Read iCal events and report the time you spend on projects.
+    Report the time spent on projects by reading iCal events.
 
   Example:
     $ icalreport -c MyHours -m 9 -u 10 -l
+
+  Example:
+    $ icalreport -c MyHours -w
+
 
 $ python icalreport.py -c "Heures_2009" -l
 ------------------------------

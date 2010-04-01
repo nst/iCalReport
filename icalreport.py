@@ -29,7 +29,7 @@ class CalReport(object):
         if len(self.calendars) != 1:
             print "Error: %d calendars with title %s" % (len(self.calendars), self.cal_name)
             sys.exit(1)
-
+            
     def print_digest(self, start_date, stop_date):
     
         predicate = CalCalendarStore.eventPredicateWithStartDate_endDate_calendars_(start_date, stop_date, self.calendars)
@@ -63,6 +63,41 @@ class CalReport(object):
         print "Total".ljust(20, ' '), "%0.2f" % (total / 3600.0)
         print "-" * 30
 
+    def get_start_and_end_for_week(self, year, week):
+        
+        beginning_of_year = datetime.datetime(year, 1, 1)
+        
+        first_week_of_year = beginning_of_year - datetime.timedelta(days=beginning_of_year.isoweekday())
+
+        start_of_week = first_week_of_year + datetime.timedelta(weeks=week)
+        
+        end_of_week = start_of_week + datetime.timedelta(days=6)
+
+        return start_of_week, end_of_week    
+    
+    def get_start_and_end_for_month(self, parser, options):
+        if parser.values.month_start:
+            month_start = options.month_start
+        else:
+            month_start = now.month
+    
+        month_stop = month_start
+    
+        if parser.values.month_stop:
+            month_stop = parser.values.month_stop
+        else:
+            month_stop = month_start
+    
+        month_stop = (month_stop) % 12 + 1
+    
+        year_shift = 1 if (month_stop <= month_start) else 0
+    
+        start_date = datetime.date(year=now.year, month=month_start, day=1)
+        stop_date = datetime.date(year=now.year+year_shift, month=month_stop, day=1)
+    
+        return start_date, stop_date
+
+
 if __name__ == '__main__':
 
     os_version = NSProcessInfo.processInfo().operatingSystemVersionString()
@@ -82,7 +117,10 @@ if __name__ == '__main__':
     parser.add_option("-m", action="store", type="int", dest="month_start", metavar="MONTH",
                       help="Number of the month for which to report (default: current)")
     parser.add_option("-u", action="store", type="int", dest="month_stop", metavar="MONTH",
-                      help="Number of the month until which to report (default: month_start)")
+                      help="Number of the month until which to report (default: current)")
+    parser.add_option("-w", action="store_true", dest="week", metavar="WEEK",
+                      help="Report for the current week")
+
     parser.add_option("-l", action="store_true", dest="use_location",
                       help="Look for projects in events locations (default: titles)")
 
@@ -92,34 +130,32 @@ if __name__ == '__main__':
     group = OptionGroup(parser, "Example", "$ icalreport -c MyHours -m 9 -u 10 -l")
     parser.add_option_group(group)
     
+    group = OptionGroup(parser, "Example", "$ icalreport -c MyHours -w")
+    parser.add_option_group(group)
+    
     (options, args) = parser.parse_args()
     
     if not parser.values.cal_name:
         parser.print_help()
         sys.exit(1)
     
-    if parser.values.month_start:
-        month_start = options.month_start
-    else:
-        month_start = now.month
-    
-    month_stop = month_start
-    
-    if parser.values.month_stop:
-        month_stop = parser.values.month_stop
-    else:
-        month_stop = month_start
-    
-    month_stop = (month_stop) % 12 + 1
-
-    year_shift = 1 if (month_stop <= month_start) else 0
-            
-    start_date = datetime.date(year=now.year, month=month_start, day=1)
-    stop_date = datetime.date(year=now.year+year_shift, month=month_stop, day=1)
-    
+    if parser.values.month_start and parser.values.week:
+        print "Please choose either to report on months or a week\n"
+        parser.print_help()
+        sys.exit(1)
+        
     field = 'location' if parser.values.use_location else 'title'
     
     ct = CalReport(cal_name=parser.values.cal_name, field=field)
-    ct.print_digest(start_date, stop_date)
-        
     
+    if options.week == True:
+        now = datetime.datetime.now()
+        
+        week_number = int((now + datetime.timedelta(days=1)).strftime("%U"))
+        
+        start_date, stop_date = ct.get_start_and_end_for_week(now.year, week_number)
+    
+    else:
+        start_date, stop_date = ct.get_start_and_end_for_month(parser, options)
+    
+    ct.print_digest(start_date, stop_date)
