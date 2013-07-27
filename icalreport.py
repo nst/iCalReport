@@ -127,8 +127,12 @@ if __name__ == '__main__':
                       help="Number of the month until which to report (default: current)")
     parser.add_option("-w", action="store_true", dest="week", metavar="WEEK",
                       help="Report for the current week")
+    parser.add_option("--lw", action="store_true", dest="last_week", metavar="LAST_WEEK",
+                      help="Report for last week")
+    parser.add_option("-t", action="store_true", dest="today", metavar="TODAY",
+                      help="Report for the current day")
     parser.add_option("-s", action="store", type="int", dest="event_duration_limit", metavar="NUMBER",
-                    help="Skip items which are longer than this number of hours")
+                      help="Skip items which are longer than this number of hours")
     parser.add_option("-l", action="store_true", dest="use_location",
                       help="Look for projects in events locations (default: titles)")
 
@@ -160,12 +164,26 @@ if __name__ == '__main__':
         event_duration_limit = int(parser.values.event_duration_limit)
     else:
         event_duration_limit = 0
-    if options.week == True:
+
+    # if today is requested
+    if options.today:
+
+        now = datetime.datetime.now()
+        todays_date = datetime.date(year=now.year, month=now.month, day=now.day)
+
+        start_date, stop_date = todays_date, todays_date
+
+    # if either the current week or last week are requested
+    elif options.week or options.last_week:
+
         now = datetime.datetime.now()
         week_number = int((now + datetime.timedelta(days=1)).strftime("%U"))
 
+        if options.last_week:
+            week_number -= 1
+
         start_date, stop_date = ct.get_start_and_end_for_week(now.year, week_number)
-    
+    # default to showing the month
     else:
         start_date, stop_date = ct.get_start_and_end_for_month(parser, options)
 
