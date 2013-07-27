@@ -76,8 +76,8 @@ class CalReport(object):
         first_week_of_year = beginning_of_year - datetime.timedelta(days=beginning_of_year.isoweekday())
 
         start_of_week = first_week_of_year + datetime.timedelta(weeks=week)
-        end_of_week = start_of_week + datetime.timedelta(days=6)
 
+        end_of_week = start_of_week + datetime.timedelta(days=7)
 
         return start_of_week, end_of_week
 
