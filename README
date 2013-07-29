@@ -7,6 +7,8 @@ Options:
   -m MONTH    Number of the month for which to report (default: current)
   -u MONTH    Number of the month until which to report (default: current)
   -w          Report for the current week
+  --lw        Report for last week
+  -t          Report for today
   -s NUMBER   Skip items which are longer than this number of hours
   -l          Look for projects in events locations (default: titles)
 
