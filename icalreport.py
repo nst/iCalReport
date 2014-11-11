@@ -108,14 +108,21 @@ class CalReport(object):
 if __name__ == '__main__':
 
     os_version = NSProcessInfo.processInfo().operatingSystemVersionString()
-    os_version = re.compile("Version (\d+\.\d+)\.\d+ .*").match(os_version).groups()[0]
+    os_version = os_version.split(' ')[1]
 
-    if float(os_version) < 10.6:
+    (major, minor) = os_version.split('.')[0:2]
+
+    if minor.zfill(2) < "06":
         print "icalreport needs Mac OS X 10.6 or later"
         sys.exit(1)
 
-    from CalendarStore import *
-
+    if minor.zfill(2) < "09":
+        from CalendarStore import *
+    else:
+        print "icalreport doesn't work on OS X 10.9 and later"
+        # from EventKit import *
+        sys.exit(1)
+    
     now = datetime.datetime.now()
 
     parser = OptionParser()
